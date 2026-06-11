@@ -28,9 +28,9 @@ export default async function LeaderboardPage() {
             <tr>
               <th className="px-3 py-2 w-8">#</th>
               <th className="px-3 py-2">Player</th>
-              <th className="px-3 py-2 text-center" title="Exact scores">3s</th>
-              <th className="px-3 py-2 text-center" title="Goal difference">2s</th>
-              <th className="px-3 py-2 text-center" title="Correct winner">1s</th>
+              <th className="hidden px-3 py-2 text-center sm:table-cell" title="Exact scores">3s</th>
+              <th className="hidden px-3 py-2 text-center sm:table-cell" title="Goal difference">2s</th>
+              <th className="hidden px-3 py-2 text-center sm:table-cell" title="Correct winner">1s</th>
               <th className="px-3 py-2 text-right">Pts</th>
             </tr>
           </thead>
@@ -44,9 +44,9 @@ export default async function LeaderboardPage() {
                     {r.id === user!.id && <span className="ml-1 text-xs text-gray-400">(you)</span>}
                   </Link>
                 </td>
-                <td className="px-3 py-2 text-center tabular-nums text-gray-600">{r.exact_hits}</td>
-                <td className="px-3 py-2 text-center tabular-nums text-gray-600">{r.diff_hits}</td>
-                <td className="px-3 py-2 text-center tabular-nums text-gray-600">{r.winner_hits}</td>
+                <td className="hidden px-3 py-2 text-center tabular-nums text-gray-600 sm:table-cell">{r.exact_hits}</td>
+                <td className="hidden px-3 py-2 text-center tabular-nums text-gray-600 sm:table-cell">{r.diff_hits}</td>
+                <td className="hidden px-3 py-2 text-center tabular-nums text-gray-600 sm:table-cell">{r.winner_hits}</td>
                 <td className="px-3 py-2 text-right text-base font-extrabold tabular-nums">
                   {r.total_points}
                 </td>

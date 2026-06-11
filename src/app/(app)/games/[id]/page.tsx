@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { TeamFlag } from "@/components/TeamFlag";
 import PredictionForm from "@/components/PredictionForm";
 import { formatDateHeader, formatTime, hasKickedOff, stageLabel } from "@/lib/format";
 import { POINTS_COLOR, POINTS_LABEL } from "@/lib/scoring";
-import type { Match, MatchStats } from "@/lib/types";
+import { computeStats } from "@/lib/stats";
+import type { Match } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -44,22 +45,15 @@ export default async function GameDetail({ params }: { params: { id: string } })
     .eq("user_id", user!.id)
     .maybeSingle();
 
-  // Others' picks + group stats are only visible after kickoff (enforced by RLS
-  // and the stats function, mirrored here in the UI).
-  let others: OtherPick[] = [];
-  let stats: MatchStats | null = null;
-  if (kickedOff) {
-    const { data: picks } = await supabase
-      .from("predictions")
-      .select("user_id, home_score, away_score, points, profiles(display_name)")
-      .eq("match_id", matchId);
-    others = (picks ?? []) as unknown as OtherPick[];
-
-    const { data: s } = await supabase.rpc("match_prediction_stats", {
-      p_match_id: matchId,
-    });
-    stats = (s?.[0] as MatchStats) ?? null;
-  }
+  // Chill group: everyone's picks + group stats are visible from the start.
+  // Read via the service client so this doesn't depend on the RLS read policy.
+  const admin = createServiceClient();
+  const { data: picks } = await admin
+    .from("predictions")
+    .select("user_id, home_score, away_score, points, profiles(display_name)")
+    .eq("match_id", matchId);
+  const others = (picks ?? []) as unknown as OtherPick[];
+  const stats = computeStats(others);
 
   return (
     <div className="space-y-6">
@@ -118,13 +112,13 @@ export default async function GameDetail({ params }: { params: { id: string } })
         )}
         {!kickedOff && (
           <p className="mt-2 text-xs text-gray-400">
-            Predictions lock at kickoff. Everyone&apos;s picks stay hidden until then.
+            Predictions lock at kickoff — you can change yours until then.
           </p>
         )}
       </section>
 
-      {/* Group stats + everyone's picks (post-kickoff) */}
-      {kickedOff && stats && stats.total > 0 && (
+      {/* Group stats + everyone's picks */}
+      {stats && stats.total > 0 && (
         <section className="space-y-3">
           <h2 className="text-lg font-bold">The group ({stats.total})</h2>
           <div className="grid grid-cols-3 gap-2 text-center">
@@ -146,7 +140,7 @@ export default async function GameDetail({ params }: { params: { id: string } })
         </section>
       )}
 
-      {kickedOff && others.length > 0 && (
+      {others.length > 0 && (
         <section>
           <h2 className="mb-2 text-lg font-bold">Everyone&apos;s picks</h2>
           <div className="divide-y rounded-xl border bg-white">

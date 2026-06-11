@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import DisplayNameForm from "@/components/DisplayNameForm";
+import { signOut } from "@/app/actions";
 import { POINTS_COLOR } from "@/lib/scoring";
 import { formatDateHeader, hasKickedOff, stageLabel } from "@/lib/format";
 import type { LeaderboardRow } from "@/lib/types";
@@ -48,8 +49,9 @@ export default async function UserDetail({ params }: { params: { id: string } })
     .maybeSingle();
   const stats = statsRow as LeaderboardRow | null;
 
-  // RLS returns all picks for yourself, but only kicked-off matches for others.
-  const { data: picksData } = await supabase
+  // Chill group: a player's full prediction record is visible to everyone.
+  const admin = createServiceClient();
+  const { data: picksData } = await admin
     .from("predictions")
     .select(
       "match_id, home_score, away_score, points, matches(home_team, away_team, home_code, away_code, kickoff, stage, group_name, status, home_score, away_score)"
@@ -78,9 +80,16 @@ export default async function UserDetail({ params }: { params: { id: string } })
         </div>
 
         {isSelf && (
-          <div className="mt-4 border-t pt-4">
-            <p className="mb-2 text-xs uppercase tracking-wide text-gray-400">Display name</p>
-            <DisplayNameForm current={profile.display_name} />
+          <div className="mt-4 flex flex-wrap items-end justify-between gap-3 border-t pt-4">
+            <div>
+              <p className="mb-2 text-xs uppercase tracking-wide text-gray-400">Display name</p>
+              <DisplayNameForm current={profile.display_name} />
+            </div>
+            <form action={signOut}>
+              <button className="rounded-lg border px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100">
+                Sign out
+              </button>
+            </form>
           </div>
         )}
 
@@ -100,7 +109,7 @@ export default async function UserDetail({ params }: { params: { id: string } })
           <p className="rounded-xl border bg-white p-4 text-sm text-gray-500">
             {isSelf
               ? "No predictions yet — head to Matches and place some!"
-              : "No revealed predictions yet (they show once each match kicks off)."}
+              : "No predictions yet."}
           </p>
         ) : (
           <div className="divide-y rounded-xl border bg-white">

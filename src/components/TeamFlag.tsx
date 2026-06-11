@@ -15,14 +15,20 @@ export function TeamFlag({
 }) {
   return (
     <div
-      className={`flex items-center gap-2 ${
+      className={`flex min-w-0 items-center gap-2 ${
         align === "right" ? "flex-row-reverse text-right" : ""
       }`}
     >
       {crest ? (
-        <img src={crest} alt="" width={22} height={22} className="h-[22px] w-[22px] object-contain" />
+        <img
+          src={crest}
+          alt=""
+          width={22}
+          height={22}
+          className="h-[22px] w-[22px] shrink-0 object-contain"
+        />
       ) : (
-        <span className="inline-flex h-[22px] w-[22px] items-center justify-center rounded bg-gray-100 text-[10px] font-bold text-gray-500">
+        <span className="inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded bg-gray-100 text-[10px] font-bold text-gray-500">
           {code ?? "?"}
         </span>
       )}
