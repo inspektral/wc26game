@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(curl -s -m 8 -o /dev/null -w \"%{http_code}\" https://registry.npmjs.org)",
+      "Bash(curl -s -m 8 -o /dev/null -w \"%{http_code}\" https://api.football-data.org/v4/competitions/WC/matches)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(curl -s -m 10 -o /tmp/sb.json -w 'HTTP %{http_code}\\\\n' '__TRACKED_VAR__/rest/v1/matches?select=id&limit=1' -H 'apikey: __TRACKED_VAR__' -H 'Authorization: Bearer __TRACKED_VAR__')",
+      "Read(//tmp/**)",
+      "Bash(curl -s -m 10 -o /tmp/sb2.json -w 'HTTP %{http_code}\\\\n' '__TRACKED_VAR__/rest/v1/leaderboard?select=id&limit=1' -H 'apikey: __TRACKED_VAR__' -H 'Authorization: Bearer __TRACKED_VAR__')",
+      "Bash(curl -s -m 15 -o /tmp/fd.json -w \"HTTP %{http_code}\\\\n\" \"https://api.football-data.org/v4/competitions/WC/matches\" -H \"X-Auth-Token: c0e1f7a28e43456ab95b2f787d2f1a59\")",
+      "Bash(node -e \"try{const d=require\\('/tmp/fd.json'\\);console.log\\('matches:', \\(d.matches||[]\\).length, '| competition:', d.competition&&d.competition.name, '| error:', d.message||d.error||'none'\\)}catch\\(e\\){console.log\\('parse fail',e.message\\)}\")",
+      "Bash(echo \"dev server started, pid $!\")",
+      "Bash(curl -s -m 60 \"http://localhost:3000/api/sync?secret=farsiuncastoroeimperativo\")",
+      "Bash(curl -s -m 10 -o /dev/null -w 'matches HTTP %{http_code}, count header: %{size_download}b body\\\\n' __TRACKED_VAR__/rest/v1/matches?select=id -H 'apikey: __TRACKED_VAR__' -H 'Authorization: Bearer __TRACKED_VAR__' -H 'Prefer: count=exact')",
+      "Bash(curl -s -m 10 '__TRACKED_VAR__/rest/v1/matches?select=home_team,away_team,kickoff,status&order=kickoff.asc&limit=3' -H 'apikey: __TRACKED_VAR__' -H 'Authorization: Bearer __TRACKED_VAR__')",
+      "Bash(gh auth *)",
+      "Bash(git config *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(git branch *)",
+      "Bash(git remote *)",
+      "Bash(git push *)"
+    ]
+  }
+}
