@@ -22,7 +22,13 @@
       "Bash(git commit -q -m ' *)",
       "Bash(git branch *)",
       "Bash(git remote *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(node -e \"let s='';process.stdin.on\\('data',d=>s+=d\\).on\\('end',\\(\\)=>{try{const j=JSON.parse\\(s\\);console.log\\('has session token:', !!j.access_token\\);console.log\\('user id:', j.user&&j.user.id || j.id || '\\(none\\)'\\);console.log\\('confirmation_sent_at:', \\(j.user&&j.user.confirmation_sent_at\\)||j.confirmation_sent_at||'\\(none\\)'\\);console.log\\('error/msg:', j.msg||j.error_description||j.error||'none'\\);}catch\\(e\\){console.log\\('raw:',s.slice\\(0,300\\)\\)}}\\)\")",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(pkill -f \"next-server\")",
+      "Bash(echo \"restarted dev pid $!\")",
+      "Bash(grep -i \"env.local$\")",
+      "Bash(curl -s -m 4 -o /dev/null -w \"login HTTP %{http_code}\\\\n\" http://localhost:3000/login)"
     ]
   }
 }
