@@ -36,7 +36,11 @@
       "Bash(curl -s -m 10 https://ywqsotxlfhwrmfukzzlx.supabase.co/rest/v1/predictions?select=id -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3cXNvdHhsZmh3cm1mdWt6emx4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTE3NjU2NywiZXhwIjoyMDk2NzUyNTY3fQ.we-L2LBckZKIM8crZV01CZDLGaciYSR1DafCLzAzjqQ' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3cXNvdHhsZmh3cm1mdWt6emx4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTE3NjU2NywiZXhwIjoyMDk2NzUyNTY3fQ.we-L2LBckZKIM8crZV01CZDLGaciYSR1DafCLzAzjqQ' -w ' <- predictions\\\\n')",
       "Bash(curl -s -m 10 https://ywqsotxlfhwrmfukzzlx.supabase.co/rest/v1/leaderboard?select=display_name,total_points -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3cXNvdHhsZmh3cm1mdWt6emx4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTE3NjU2NywiZXhwIjoyMDk2NzUyNTY3fQ.we-L2LBckZKIM8crZV01CZDLGaciYSR1DafCLzAzjqQ' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3cXNvdHhsZmh3cm1mdWt6emx4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTE3NjU2NywiZXhwIjoyMDk2NzUyNTY3fQ.we-L2LBckZKIM8crZV01CZDLGaciYSR1DafCLzAzjqQ' -w ' <- leaderboard\\\\n')",
       "Bash(curl -s -m 5 -o /dev/null -w \"%{http_code}\" http://localhost:3000/login)",
-      "Bash(curl -s -m 5 -o /dev/null -w \"%{http_code}\" http://localhost:3000/games)"
+      "Bash(curl -s -m 5 -o /dev/null -w \"%{http_code}\" http://localhost:3000/games)",
+      "Bash(npx tsc *)",
+      "Bash(echo \"=== tsc exit: $? ===\")",
+      "Bash(ps -eo pid,args)",
+      "Bash(kill -9 28570 28571 28583)"
     ]
   }
 }

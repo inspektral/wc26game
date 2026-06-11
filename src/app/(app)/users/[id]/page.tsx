@@ -4,7 +4,8 @@ import { createClient, createServiceClient } from "@/lib/supabase/server";
 import DisplayNameForm from "@/components/DisplayNameForm";
 import { signOut } from "@/app/actions";
 import { POINTS_COLOR } from "@/lib/scoring";
-import { formatDateHeader, hasKickedOff, stageLabel } from "@/lib/format";
+import { LocalTime } from "@/components/LocalTime";
+import { hasKickedOff, stageLabel } from "@/lib/format";
 import type { LeaderboardRow } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -128,7 +129,7 @@ export default async function UserDetail({ params }: { params: { id: string } })
                       {mt.home_team} v {mt.away_team}
                     </div>
                     <div className="text-xs text-gray-400">
-                      {stageLabel(mt.stage, mt.group_name)} · {formatDateHeader(mt.kickoff)}
+                      {stageLabel(mt.stage, mt.group_name)} · <LocalTime iso={mt.kickoff} mode="date" />
                     </div>
                   </div>
                   <div className="flex items-center gap-3 pl-3">

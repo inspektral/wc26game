@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { Match, Prediction } from "@/lib/types";
 import { TeamFlag } from "./TeamFlag";
-import { formatTime, stageLabel } from "@/lib/format";
+import { LocalTime } from "./LocalTime";
+import { stageLabel } from "@/lib/format";
 import { POINTS_COLOR } from "@/lib/scoring";
 
 export default function MatchCard({
@@ -28,7 +29,7 @@ export default function MatchCard({
           ) : finished ? (
             "Full time"
           ) : (
-            formatTime(match.kickoff)
+            <LocalTime iso={match.kickoff} mode="time" />
           )}
         </span>
       </div>

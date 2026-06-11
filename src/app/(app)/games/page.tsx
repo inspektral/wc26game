@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import MatchCard from "@/components/MatchCard";
-import { dateKey, formatDateHeader } from "@/lib/format";
+import { LocalTime } from "@/components/LocalTime";
+import { dateKey } from "@/lib/format";
 import type { Match, Prediction } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -46,7 +47,7 @@ export default async function GamesPage() {
       {[...groups.entries()].map(([key, ms]) => (
         <section key={key}>
           <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-gray-500">
-            {formatDateHeader(ms[0].kickoff)}
+            <LocalTime iso={ms[0].kickoff} mode="date" />
           </h2>
           <div className="space-y-2">
             {ms.map((m) => (

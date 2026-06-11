@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { TeamFlag } from "@/components/TeamFlag";
 import PredictionForm from "@/components/PredictionForm";
-import { formatDateHeader, formatTime, hasKickedOff, stageLabel } from "@/lib/format";
+import { LocalTime } from "@/components/LocalTime";
+import { hasKickedOff, stageLabel } from "@/lib/format";
 import { POINTS_COLOR, POINTS_LABEL } from "@/lib/scoring";
 import { computeStats } from "@/lib/stats";
 import type { Match } from "@/lib/types";
@@ -64,8 +65,8 @@ export default async function GameDetail({ params }: { params: { id: string } })
       {/* Scoreboard */}
       <div className="rounded-2xl border bg-white p-5">
         <div className="mb-3 text-center text-xs text-gray-500">
-          {stageLabel(m.stage, m.group_name)} · {formatDateHeader(m.kickoff)} ·{" "}
-          {formatTime(m.kickoff)}
+          {stageLabel(m.stage, m.group_name)} · <LocalTime iso={m.kickoff} mode="date" /> ·{" "}
+          <LocalTime iso={m.kickoff} mode="time" />
         </div>
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
           <TeamFlag name={m.home_team} code={m.home_code} crest={m.home_crest} />
