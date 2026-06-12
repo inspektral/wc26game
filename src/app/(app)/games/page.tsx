@@ -38,15 +38,15 @@ export default async function GamesPage() {
   const isLive = (m: Match) => m.status === "IN_PLAY" || m.status === "PAUSED";
   const isFinished = (m: Match) => m.status === "FINISHED";
 
-  // "Up next": anything live right now, plus the next batch of matches that kick
-  // off at the soonest upcoming time (handles simultaneous kickoffs cleanly).
+  // Currently live matches go to the very top in their own section.
   const live = allMatches.filter(isLive);
+  // "Up next": the next batch of matches that kick off at the soonest upcoming
+  // time (handles simultaneous kickoffs cleanly).
   const upcoming = allMatches.filter(
     (m) => !isLive(m) && !isFinished(m) && new Date(m.kickoff).getTime() > now
   );
   const nextKickoff = upcoming[0]?.kickoff;
   const nextSlot = nextKickoff ? upcoming.filter((m) => m.kickoff === nextKickoff) : [];
-  const upNext = [...live, ...nextSlot];
 
   // "All matches": full schedule grouped by date; finished games are dimmed.
   const groups = new Map<string, Match[]>();
@@ -58,13 +58,27 @@ export default async function GamesPage() {
 
   return (
     <div className="space-y-8">
-      {upNext.length > 0 && (
+      {live.length > 0 && (
         <section>
-          <h2 className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-pitch-700">
+          <h2 className="mb-2 flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-red-600">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-red-600" />
+            Live now
+          </h2>
+          <div className="space-y-2">
+            {live.map((m) => (
+              <MatchCard key={m.id} match={m} prediction={predFor(m.id)} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {nextSlot.length > 0 && (
+        <section>
+          <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-pitch-700">
             Up next
           </h2>
           <div className="space-y-2">
-            {upNext.map((m) => (
+            {nextSlot.map((m) => (
               <MatchCard key={m.id} match={m} prediction={predFor(m.id)} highlight />
             ))}
           </div>

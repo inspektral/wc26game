@@ -27,9 +27,11 @@ export default function MatchCard({
     <Link
       href={`/games/${match.id}`}
       className={`block rounded-xl border p-3 transition hover:shadow-sm ${
-        highlight
-          ? "border-pitch-600 ring-1 ring-pitch-600/40 hover:border-pitch-700"
-          : "hover:border-pitch-600"
+        live
+          ? "border-red-500 ring-1 ring-red-500/40"
+          : highlight
+            ? "border-pitch-600 ring-1 ring-pitch-600/40 hover:border-pitch-700"
+            : "hover:border-pitch-600"
       } ${past ? "border-gray-300 bg-gray-200" : "bg-white"}`}
     >
       <div className="mb-2 flex items-center justify-between text-xs text-gray-500">
