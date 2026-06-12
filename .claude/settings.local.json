@@ -43,7 +43,8 @@
       "Bash(kill -9 28570 28571 28583)",
       "Bash(echo \"tsc exit: $?\")",
       "Bash(awk '{print $1}')",
-      "Bash(xargs -r kill -9)"
+      "Bash(xargs -r kill -9)",
+      "Bash(node -e \"let s='';process.stdin.on\\('data',d=>s+=d\\).on\\('end',\\(\\)=>{const j=JSON.parse\\(s\\);const m=j.matches[0];console.log\\('TOP-LEVEL KEYS:',Object.keys\\(m\\).join\\(', '\\)\\);console.log\\('\\\\nminute:',m.minute\\);console.log\\('injuryTime:',m.injuryTime\\);console.log\\('status:',m.status\\);console.log\\('score:',JSON.stringify\\(m.score\\)\\);console.log\\('\\\\nFULL FIRST MATCH:\\\\n',JSON.stringify\\(m,null,1\\).slice\\(0,900\\)\\)}\\)\")"
     ]
   }
 }

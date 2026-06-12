@@ -15,7 +15,7 @@ export function LocalTime({ iso, mode }: { iso: string; mode: Mode }) {
   useEffect(() => {
     const opts: Intl.DateTimeFormatOptions =
       mode === "time"
-        ? { hour: "2-digit", minute: "2-digit" }
+        ? { hour: "2-digit", minute: "2-digit", hour12: false }
         : { weekday: "long", day: "numeric", month: "long" };
     setText(new Intl.DateTimeFormat(undefined, opts).format(new Date(iso)));
   }, [iso, mode]);

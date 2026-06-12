@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
-import { TeamFlag } from "@/components/TeamFlag";
 import PredictionForm from "@/components/PredictionForm";
 import { LocalTime } from "@/components/LocalTime";
 import { LiveBadge } from "@/components/LiveBadge";
+import { MatchPeriod } from "@/components/MatchPeriod";
 import { AutoRefresh } from "@/components/AutoRefresh";
 import { hasKickedOff, stageLabel } from "@/lib/format";
 import { POINTS_COLOR, POINTS_LABEL } from "@/lib/scoring";
@@ -71,10 +71,10 @@ export default async function GameDetail({ params }: { params: { id: string } })
           {stageLabel(m.stage, m.group_name)} · <LocalTime iso={m.kickoff} mode="date" /> ·{" "}
           <LocalTime iso={m.kickoff} mode="time" />
         </div>
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-          <TeamFlag name={m.home_team} code={m.home_code} crest={m.home_crest} />
+        <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-2 sm:gap-4">
+          <TeamColumn name={m.home_team} code={m.home_code} crest={m.home_crest} />
           <div
-            className={`rounded-xl px-4 py-2 text-center text-3xl font-extrabold tabular-nums ${
+            className={`mt-2 rounded-xl px-3 py-2 text-center text-3xl font-extrabold tabular-nums sm:px-4 ${
               live ? "bg-red-50 text-red-700" : "bg-gray-100"
             }`}
           >
@@ -82,11 +82,16 @@ export default async function GameDetail({ params }: { params: { id: string } })
               ? `${m.home_score} : ${m.away_score}`
               : "vs"}
           </div>
-          <TeamFlag name={m.away_team} code={m.away_code} crest={m.away_crest} align="right" />
+          <TeamColumn name={m.away_team} code={m.away_code} crest={m.away_crest} />
         </div>
 
         <div className="mt-3 flex flex-col items-center gap-1">
-          {live && <LiveBadge />}
+          {live && (
+            <div className="flex items-center gap-2">
+              <LiveBadge />
+              <MatchPeriod kickoff={m.kickoff} status={m.status} />
+            </div>
+          )}
           {finished && (
             <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
               Full time
@@ -192,6 +197,32 @@ export default async function GameDetail({ params }: { params: { id: string } })
           </div>
         </section>
       )}
+    </div>
+  );
+}
+
+// Stacked team display for the scoreboard: crest on its own row, full team name
+// below with room to wrap onto multiple lines (no truncation).
+function TeamColumn({
+  name,
+  code,
+  crest,
+}: {
+  name: string;
+  code: string | null;
+  crest: string | null;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-2 text-center">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {crest ? (
+        <img src={crest} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
+      ) : (
+        <span className="flex h-10 w-10 items-center justify-center rounded bg-gray-100 text-xs font-bold text-gray-500">
+          {code ?? "?"}
+        </span>
+      )}
+      <span className="text-sm font-semibold leading-tight">{name}</span>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import type { Match, Prediction } from "@/lib/types";
 import { TeamFlag } from "./TeamFlag";
 import { LocalTime } from "./LocalTime";
 import { LiveBadge } from "./LiveBadge";
+import { MatchPeriod } from "./MatchPeriod";
 import { stageLabel } from "@/lib/format";
 import { POINTS_COLOR } from "@/lib/scoring";
 
@@ -26,7 +27,10 @@ export default function MatchCard({
         <span>{stageLabel(match.stage, match.group_name)}</span>
         <span>
           {live ? (
-            <LiveBadge />
+            <span className="inline-flex items-center gap-1.5">
+              <LiveBadge />
+              <MatchPeriod kickoff={match.kickoff} status={match.status} />
+            </span>
           ) : finished ? (
             "Full time"
           ) : (

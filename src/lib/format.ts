@@ -12,6 +12,7 @@ const DATE_HEADER = new Intl.DateTimeFormat("en-GB", {
 const TIME = new Intl.DateTimeFormat("en-GB", {
   hour: "2-digit",
   minute: "2-digit",
+  hour12: false,
   timeZone: "UTC",
 });
 
