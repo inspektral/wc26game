@@ -23,6 +23,7 @@ export interface Match {
   status: MatchStatus;
   home_score: number | null;
   away_score: number | null;
+  updated_at: string; // ISO timestamp of the last sync that touched this row
 }
 
 export interface Prediction {

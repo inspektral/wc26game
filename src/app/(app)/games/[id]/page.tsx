@@ -4,6 +4,8 @@ import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { TeamFlag } from "@/components/TeamFlag";
 import PredictionForm from "@/components/PredictionForm";
 import { LocalTime } from "@/components/LocalTime";
+import { LiveBadge } from "@/components/LiveBadge";
+import { AutoRefresh } from "@/components/AutoRefresh";
 import { hasKickedOff, stageLabel } from "@/lib/format";
 import { POINTS_COLOR, POINTS_LABEL } from "@/lib/scoring";
 import { computeStats } from "@/lib/stats";
@@ -38,6 +40,7 @@ export default async function GameDetail({ params }: { params: { id: string } })
   const m = match as Match;
   const kickedOff = hasKickedOff(m.kickoff);
   const finished = m.status === "FINISHED";
+  const live = m.status === "IN_PLAY" || m.status === "PAUSED";
 
   const { data: mine } = await supabase
     .from("predictions")
@@ -70,19 +73,34 @@ export default async function GameDetail({ params }: { params: { id: string } })
         </div>
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
           <TeamFlag name={m.home_team} code={m.home_code} crest={m.home_crest} />
-          <div className="rounded-xl bg-gray-100 px-4 py-2 text-center text-3xl font-extrabold tabular-nums">
+          <div
+            className={`rounded-xl px-4 py-2 text-center text-3xl font-extrabold tabular-nums ${
+              live ? "bg-red-50 text-red-700" : "bg-gray-100"
+            }`}
+          >
             {kickedOff && m.home_score !== null
               ? `${m.home_score} : ${m.away_score}`
               : "vs"}
           </div>
           <TeamFlag name={m.away_team} code={m.away_code} crest={m.away_crest} align="right" />
         </div>
-        {finished && (
-          <p className="mt-3 text-center text-xs font-semibold uppercase tracking-wide text-gray-400">
-            Full time
-          </p>
-        )}
+
+        <div className="mt-3 flex flex-col items-center gap-1">
+          {live && <LiveBadge />}
+          {finished && (
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+              Full time
+            </p>
+          )}
+          {kickedOff && m.home_score !== null && (
+            <p className="text-[11px] text-gray-400">
+              Updated <LocalTime iso={m.updated_at} mode="time" />
+            </p>
+          )}
+        </div>
       </div>
+
+      {live && <AutoRefresh />}
 
       {/* Your prediction */}
       <section>

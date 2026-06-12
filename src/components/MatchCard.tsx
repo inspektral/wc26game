@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Match, Prediction } from "@/lib/types";
 import { TeamFlag } from "./TeamFlag";
 import { LocalTime } from "./LocalTime";
+import { LiveBadge } from "./LiveBadge";
 import { stageLabel } from "@/lib/format";
 import { POINTS_COLOR } from "@/lib/scoring";
 
@@ -25,7 +26,7 @@ export default function MatchCard({
         <span>{stageLabel(match.stage, match.group_name)}</span>
         <span>
           {live ? (
-            <span className="font-semibold text-red-600">● LIVE</span>
+            <LiveBadge />
           ) : finished ? (
             "Full time"
           ) : (
@@ -36,7 +37,11 @@ export default function MatchCard({
 
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
         <TeamFlag name={match.home_team} code={match.home_code} crest={match.home_crest} />
-        <div className="min-w-[52px] rounded-lg bg-gray-100 px-2 py-1 text-center font-bold tabular-nums">
+        <div
+          className={`min-w-[52px] rounded-lg px-2 py-1 text-center font-bold tabular-nums ${
+            live ? "bg-red-50 text-red-700" : "bg-gray-100"
+          }`}
+        >
           {kickedOff && match.home_score !== null
             ? `${match.home_score} : ${match.away_score}`
             : "vs"}

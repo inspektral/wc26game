@@ -40,7 +40,10 @@
       "Bash(npx tsc *)",
       "Bash(echo \"=== tsc exit: $? ===\")",
       "Bash(ps -eo pid,args)",
-      "Bash(kill -9 28570 28571 28583)"
+      "Bash(kill -9 28570 28571 28583)",
+      "Bash(echo \"tsc exit: $?\")",
+      "Bash(awk '{print $1}')",
+      "Bash(xargs -r kill -9)"
     ]
   }
 }
