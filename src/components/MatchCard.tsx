@@ -30,7 +30,7 @@ export default function MatchCard({
         highlight
           ? "border-pitch-600 ring-1 ring-pitch-600/40 hover:border-pitch-700"
           : "hover:border-pitch-600"
-      } ${past ? "bg-gray-50" : "bg-white"}`}
+      } ${past ? "border-gray-300 bg-gray-200" : "bg-white"}`}
     >
       <div className="mb-2 flex items-center justify-between text-xs text-gray-500">
         <span>{stageLabel(match.stage, match.group_name)}</span>
