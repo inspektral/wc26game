@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { NavLinks } from "./NavLinks";
 
 export default async function NavBar() {
   const supabase = createClient();
@@ -23,15 +24,7 @@ export default async function NavBar() {
         <Link href="/games" className="shrink-0 text-lg font-extrabold text-pitch-700">
           ⚽<span className="hidden sm:inline"> WC26</span>
         </Link>
-        <Link href="/games" className="text-sm font-medium text-gray-700 hover:text-pitch-700">
-          Games
-        </Link>
-        <Link
-          href="/leaderboard"
-          className="text-sm font-medium text-gray-700 hover:text-pitch-700"
-        >
-          Leaderboard
-        </Link>
+        <NavLinks />
         {user && (
           <Link
             href={`/users/${user.id}`}

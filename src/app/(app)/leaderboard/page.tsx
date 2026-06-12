@@ -20,8 +20,6 @@ export default async function LeaderboardPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-extrabold">Leaderboard</h1>
-
       <div className="overflow-hidden rounded-xl border bg-white">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-500">

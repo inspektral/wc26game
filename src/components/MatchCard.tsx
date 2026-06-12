@@ -4,15 +4,20 @@ import { TeamFlag } from "./TeamFlag";
 import { LocalTime } from "./LocalTime";
 import { LiveBadge } from "./LiveBadge";
 import { MatchPeriod } from "./MatchPeriod";
+import { RelativeTime } from "./RelativeTime";
 import { stageLabel } from "@/lib/format";
 import { POINTS_COLOR } from "@/lib/scoring";
 
 export default function MatchCard({
   match,
   prediction,
+  highlight = false,
+  past = false,
 }: {
   match: Match;
   prediction?: Prediction | null;
+  highlight?: boolean;
+  past?: boolean;
 }) {
   const finished = match.status === "FINISHED";
   const live = match.status === "IN_PLAY" || match.status === "PAUSED";
@@ -21,7 +26,11 @@ export default function MatchCard({
   return (
     <Link
       href={`/games/${match.id}`}
-      className="block rounded-xl border bg-white p-3 transition hover:border-pitch-600 hover:shadow-sm"
+      className={`block rounded-xl border p-3 transition hover:shadow-sm ${
+        highlight
+          ? "border-pitch-600 ring-1 ring-pitch-600/40 hover:border-pitch-700"
+          : "hover:border-pitch-600"
+      } ${past ? "bg-gray-50" : "bg-white"}`}
     >
       <div className="mb-2 flex items-center justify-between text-xs text-gray-500">
         <span>{stageLabel(match.stage, match.group_name)}</span>
@@ -75,6 +84,11 @@ export default function MatchCard({
         {finished && prediction && (
           <span className={`rounded px-1.5 py-0.5 font-semibold ${POINTS_COLOR[prediction.points]}`}>
             +{prediction.points}
+          </span>
+        )}
+        {highlight && !kickedOff && !finished && (
+          <span className="font-semibold text-pitch-700">
+            <RelativeTime iso={match.kickoff} />
           </span>
         )}
       </div>

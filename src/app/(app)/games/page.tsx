@@ -19,6 +19,7 @@ export default async function GamesPage() {
 
   const predByMatch = new Map<number, Prediction>();
   (preds ?? []).forEach((p) => predByMatch.set(p.match_id, p as Prediction));
+  const predFor = (id: number) => predByMatch.get(id) ?? null;
 
   const allMatches = (matches ?? []) as Match[];
 
@@ -33,7 +34,21 @@ export default async function GamesPage() {
     );
   }
 
-  // Group by UTC date.
+  const now = Date.now();
+  const isLive = (m: Match) => m.status === "IN_PLAY" || m.status === "PAUSED";
+  const isFinished = (m: Match) => m.status === "FINISHED";
+
+  // "Up next": anything live right now, plus the next batch of matches that kick
+  // off at the soonest upcoming time (handles simultaneous kickoffs cleanly).
+  const live = allMatches.filter(isLive);
+  const upcoming = allMatches.filter(
+    (m) => !isLive(m) && !isFinished(m) && new Date(m.kickoff).getTime() > now
+  );
+  const nextKickoff = upcoming[0]?.kickoff;
+  const nextSlot = nextKickoff ? upcoming.filter((m) => m.kickoff === nextKickoff) : [];
+  const upNext = [...live, ...nextSlot];
+
+  // "All matches": full schedule grouped by date; finished games are dimmed.
   const groups = new Map<string, Match[]>();
   for (const m of allMatches) {
     const k = dateKey(m.kickoff);
@@ -42,20 +57,51 @@ export default async function GamesPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-extrabold">Matches</h1>
-      {[...groups.entries()].map(([key, ms]) => (
-        <section key={key}>
-          <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-gray-500">
-            <LocalTime iso={ms[0].kickoff} mode="date" />
+    <div className="space-y-8">
+      {upNext.length > 0 && (
+        <section>
+          <h2 className="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-pitch-700">
+            Up next
           </h2>
           <div className="space-y-2">
-            {ms.map((m) => (
-              <MatchCard key={m.id} match={m} prediction={predByMatch.get(m.id) ?? null} />
+            {upNext.map((m) => (
+              <MatchCard key={m.id} match={m} prediction={predFor(m.id)} highlight />
             ))}
           </div>
         </section>
-      ))}
+      )}
+
+      <section>
+        <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-gray-500">
+          All matches
+        </h2>
+        <div className="space-y-6">
+          {[...groups.entries()].map(([key, ms]) => {
+            const allPast = ms.every(isFinished);
+            return (
+              <div key={key}>
+                <h3
+                  className={`mb-2 text-xs font-bold uppercase tracking-wide ${
+                    allPast ? "text-gray-300" : "text-gray-500"
+                  }`}
+                >
+                  <LocalTime iso={ms[0].kickoff} mode="date" />
+                </h3>
+                <div className="space-y-2">
+                  {ms.map((m) => (
+                    <MatchCard
+                      key={m.id}
+                      match={m}
+                      prediction={predFor(m.id)}
+                      past={isFinished(m)}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
     </div>
   );
 }
