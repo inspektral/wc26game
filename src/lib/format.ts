@@ -32,6 +32,20 @@ export function hasKickedOff(iso: string): boolean {
   return new Date(iso).getTime() <= Date.now();
 }
 
+// A match counts as live if the API says so (IN_PLAY/PAUSED) OR it has kicked
+// off and isn't finished yet — this bridges the gap between kickoff and the
+// (delayed, free-tier) status flip, so a just-started match never vanishes from
+// the top of the page. The 3.25h cap guards against a status that never updates.
+export function isLiveMatch(status: string, kickoffIso: string): boolean {
+  if (status === "IN_PLAY" || status === "PAUSED") return true;
+  if (status === "TIMED" || status === "SCHEDULED") {
+    const kickoff = new Date(kickoffIso).getTime();
+    const now = Date.now();
+    return kickoff <= now && now < kickoff + 3.25 * 60 * 60 * 1000;
+  }
+  return false;
+}
+
 const STAGE_LABELS: Record<string, string> = {
   GROUP_STAGE: "Group stage",
   LAST_16: "Round of 16",

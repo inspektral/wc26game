@@ -6,7 +6,7 @@ import { LocalTime } from "./LocalTime";
 import { LiveBadge } from "./LiveBadge";
 import { MatchPeriod } from "./MatchPeriod";
 import { RelativeTime } from "./RelativeTime";
-import { groupOrStageShort, stageLabel } from "@/lib/format";
+import { groupOrStageShort, isLiveMatch, stageLabel } from "@/lib/format";
 import { POINTS_COLOR } from "@/lib/scoring";
 
 export default function MatchCard({
@@ -21,7 +21,7 @@ export default function MatchCard({
   past?: boolean;
 }) {
   const finished = match.status === "FINISHED";
-  const live = match.status === "IN_PLAY" || match.status === "PAUSED";
+  const live = isLiveMatch(match.status, match.kickoff);
   const kickedOff = new Date(match.kickoff).getTime() <= Date.now();
 
   // Compact single-row card for finished matches (less to scroll past).

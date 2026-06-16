@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import MatchCard from "@/components/MatchCard";
 import { LocalTime } from "@/components/LocalTime";
-import { dateKey } from "@/lib/format";
+import { dateKey, isLiveMatch } from "@/lib/format";
 import type { Match, Prediction } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -35,7 +35,7 @@ export default async function GamesPage() {
   }
 
   const now = Date.now();
-  const isLive = (m: Match) => m.status === "IN_PLAY" || m.status === "PAUSED";
+  const isLive = (m: Match) => isLiveMatch(m.status, m.kickoff);
   const isFinished = (m: Match) => m.status === "FINISHED";
 
   // Currently live matches go to the very top in their own section.
