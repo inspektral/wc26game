@@ -40,13 +40,13 @@ export default async function GamesPage() {
 
   // Currently live matches go to the very top in their own section.
   const live = allMatches.filter(isLive);
-  // "Up next": the next batch of matches that kick off at the soonest upcoming
-  // time (handles simultaneous kickoffs cleanly).
+  // "Up next": everything kicking off within the next 24h (kickoffs are spread
+  // across timezones, so a single "next slot" would miss tonight's games).
+  const DAY_MS = 24 * 60 * 60 * 1000;
   const upcoming = allMatches.filter(
     (m) => !isLive(m) && !isFinished(m) && new Date(m.kickoff).getTime() > now
   );
-  const nextKickoff = upcoming[0]?.kickoff;
-  const nextSlot = nextKickoff ? upcoming.filter((m) => m.kickoff === nextKickoff) : [];
+  const next24h = upcoming.filter((m) => new Date(m.kickoff).getTime() <= now + DAY_MS);
 
   // "All matches": full schedule grouped by date; finished games are dimmed.
   const groups = new Map<string, Match[]>();
@@ -72,13 +72,13 @@ export default async function GamesPage() {
         </section>
       )}
 
-      {nextSlot.length > 0 && (
+      {next24h.length > 0 && (
         <section>
           <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-pitch-700">
-            Up next
+            Next 24 hours
           </h2>
           <div className="space-y-2">
-            {nextSlot.map((m) => (
+            {next24h.map((m) => (
               <MatchCard key={m.id} match={m} prediction={predFor(m.id)} highlight />
             ))}
           </div>
