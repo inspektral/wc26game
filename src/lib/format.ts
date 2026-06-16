@@ -42,6 +42,21 @@ const STAGE_LABELS: Record<string, string> = {
   FINAL: "Final",
 };
 
+const SHORT_STAGE: Record<string, string> = {
+  LAST_16: "R16",
+  ROUND_OF_16: "R16",
+  QUARTER_FINALS: "QF",
+  SEMI_FINALS: "SF",
+  THIRD_PLACE: "3rd",
+  FINAL: "F",
+};
+
+// Compact tag: just the group letter ("A"), or a short stage code for knockouts.
+export function groupOrStageShort(stage: string | null, group: string | null): string {
+  if (group) return group.replace(/group[_ ]?/i, "").trim();
+  return stage ? SHORT_STAGE[stage] ?? "" : "";
+}
+
 export function stageLabel(stage: string | null, group: string | null): string {
   if (group) return group.replace("GROUP_", "Group ").replace("GROUP", "Group ");
   if (stage && STAGE_LABELS[stage]) return STAGE_LABELS[stage];

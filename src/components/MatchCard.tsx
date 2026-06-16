@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import type { Match, Prediction } from "@/lib/types";
 import { TeamFlag } from "./TeamFlag";
@@ -5,7 +6,7 @@ import { LocalTime } from "./LocalTime";
 import { LiveBadge } from "./LiveBadge";
 import { MatchPeriod } from "./MatchPeriod";
 import { RelativeTime } from "./RelativeTime";
-import { stageLabel } from "@/lib/format";
+import { groupOrStageShort, stageLabel } from "@/lib/format";
 import { POINTS_COLOR } from "@/lib/scoring";
 
 export default function MatchCard({
@@ -22,6 +23,45 @@ export default function MatchCard({
   const finished = match.status === "FINISHED";
   const live = match.status === "IN_PLAY" || match.status === "PAUSED";
   const kickedOff = new Date(match.kickoff).getTime() <= Date.now();
+
+  // Compact single-row card for finished matches (less to scroll past).
+  if (past) {
+    return (
+      <Link
+        href={`/games/${match.id}`}
+        className="flex items-center gap-2 rounded-lg border border-gray-300 bg-gray-200 px-3 py-2 text-sm text-gray-700 transition hover:shadow-sm"
+      >
+        <span className="w-5 shrink-0 text-center text-[10px] font-bold text-gray-400">
+          {groupOrStageShort(match.stage, match.group_name)}
+        </span>
+        <div className="grid min-w-0 flex-1 grid-cols-[1fr_auto_1fr] items-center gap-1.5">
+          <span className="flex min-w-0 items-center justify-end gap-1">
+            <span className="truncate">{match.home_team}</span>
+            {match.home_crest && (
+              <img src={match.home_crest} alt="" className="h-4 w-4 shrink-0 object-contain" />
+            )}
+          </span>
+          <span className="font-bold tabular-nums">
+            {match.home_score}–{match.away_score}
+          </span>
+          <span className="flex min-w-0 items-center gap-1">
+            {match.away_crest && (
+              <img src={match.away_crest} alt="" className="h-4 w-4 shrink-0 object-contain" />
+            )}
+            <span className="truncate">{match.away_team}</span>
+          </span>
+        </div>
+        <span className="shrink-0 text-[10px] font-medium text-gray-400">FT</span>
+        {prediction && (
+          <span
+            className={`shrink-0 rounded px-1 py-0.5 text-[10px] font-bold ${POINTS_COLOR[prediction.points]}`}
+          >
+            +{prediction.points}
+          </span>
+        )}
+      </Link>
+    );
+  }
 
   return (
     <Link
