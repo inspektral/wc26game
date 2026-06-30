@@ -51,7 +51,9 @@ export default function MatchCard({
             <span className="truncate">{match.away_team}</span>
           </span>
         </div>
-        <span className="shrink-0 text-[10px] font-medium text-gray-400">FT</span>
+        <span className="shrink-0 text-[10px] font-medium text-gray-400">
+          {match.result_note ?? "FT"}
+        </span>
         {prediction && (
           <span
             className={`shrink-0 rounded px-1 py-0.5 text-[10px] font-bold ${POINTS_COLOR[prediction.points]}`}
@@ -108,6 +110,12 @@ export default function MatchCard({
           align="right"
         />
       </div>
+
+      {match.result_note && (
+        <p className="mt-1.5 text-center text-[11px] font-medium text-gray-500">
+          {match.result_note}
+        </p>
+      )}
 
       <div className="mt-2 flex items-center justify-between text-xs">
         {prediction ? (

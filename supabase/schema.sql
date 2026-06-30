@@ -25,10 +25,14 @@ create table if not exists matches (
   stage         text,                             -- GROUP_STAGE, ROUND_OF_16, ...
   group_name    text,                             -- "Group A" etc (null in knockouts)
   status        text not null default 'SCHEDULED',-- SCHEDULED|TIMED|IN_PLAY|PAUSED|FINISHED|...
-  home_score    int,
+  home_score    int,                              -- full time incl. extra time, excl. penalties
   away_score    int,
+  result_note   text,                             -- e.g. 'pens 3–4' or 'a.e.t.' for knockouts
   updated_at    timestamptz not null default now()
 );
+
+-- Migration for existing databases (safe to run repeatedly):
+alter table matches add column if not exists result_note text;
 
 create index if not exists matches_kickoff_idx on matches (kickoff);
 

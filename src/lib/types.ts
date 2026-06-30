@@ -21,8 +21,9 @@ export interface Match {
   stage: string | null;
   group_name: string | null;
   status: MatchStatus;
-  home_score: number | null;
+  home_score: number | null; // full time incl. extra time, excl. penalties
   away_score: number | null;
+  result_note: string | null; // e.g. "pens 3–4" / "a.e.t." for knockout matches
   updated_at: string; // ISO timestamp of the last sync that touched this row
 }
 

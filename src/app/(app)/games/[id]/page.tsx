@@ -94,7 +94,7 @@ export default async function GameDetail({ params }: { params: { id: string } })
           )}
           {finished && (
             <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-              Full time
+              Full time{m.result_note ? ` · ${m.result_note}` : ""}
             </p>
           )}
           {kickedOff && m.home_score !== null && (
