@@ -59,7 +59,7 @@ function scoredGoals(score: FdScore): { home: number | null; away: number | null
 
 function resultNote(score: FdScore): string | null {
   if (score.duration === "PENALTY_SHOOTOUT" && score.penalties) {
-    return `pens ${score.penalties.home}–${score.penalties.away}`;
+    return `penis ${score.penalties.home}–${score.penalties.away}`;
   }
   if (score.duration === "EXTRA_TIME") return "a.e.t.";
   return null;

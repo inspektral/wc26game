@@ -29,37 +29,42 @@ export default function MatchCard({
     return (
       <Link
         href={`/games/${match.id}`}
-        className="flex items-center gap-2 rounded-lg border border-gray-300 bg-gray-200 px-3 py-2 text-sm text-gray-700 transition hover:shadow-sm"
+        className="block rounded-lg border border-gray-300 bg-gray-200 px-3 py-2 text-sm text-gray-700 transition hover:shadow-sm"
       >
-        <span className="w-5 shrink-0 text-center text-[10px] font-bold text-gray-400">
-          {groupOrStageShort(match.stage, match.group_name)}
-        </span>
-        <div className="grid min-w-0 flex-1 grid-cols-[1fr_auto_1fr] items-center gap-1.5">
-          <span className="flex min-w-0 items-center justify-end gap-1">
-            <span className="truncate">{match.home_team}</span>
-            {match.home_crest && (
-              <img src={match.home_crest} alt="" className="h-4 w-4 shrink-0 object-contain" />
-            )}
+        <div className="flex items-center gap-2">
+          <span className="w-5 shrink-0 text-center text-[10px] font-bold text-gray-400">
+            {groupOrStageShort(match.stage, match.group_name)}
           </span>
-          <span className="font-bold tabular-nums">
-            {match.home_score}–{match.away_score}
-          </span>
-          <span className="flex min-w-0 items-center gap-1">
-            {match.away_crest && (
-              <img src={match.away_crest} alt="" className="h-4 w-4 shrink-0 object-contain" />
-            )}
-            <span className="truncate">{match.away_team}</span>
-          </span>
+          <div className="grid min-w-0 flex-1 grid-cols-[1fr_auto_1fr] items-center gap-1.5">
+            <span className="flex min-w-0 items-center justify-end gap-1">
+              <span className="truncate">{match.home_team}</span>
+              {match.home_crest && (
+                <img src={match.home_crest} alt="" className="h-4 w-4 shrink-0 object-contain" />
+              )}
+            </span>
+            <span className="font-bold tabular-nums">
+              {match.home_score}–{match.away_score}
+            </span>
+            <span className="flex min-w-0 items-center gap-1">
+              {match.away_crest && (
+                <img src={match.away_crest} alt="" className="h-4 w-4 shrink-0 object-contain" />
+              )}
+              <span className="truncate">{match.away_team}</span>
+            </span>
+          </div>
+          <span className="shrink-0 text-[10px] font-medium text-gray-400">FT</span>
+          {prediction && (
+            <span
+              className={`shrink-0 rounded px-1 py-0.5 text-[10px] font-bold ${POINTS_COLOR[prediction.points]}`}
+            >
+              +{prediction.points}
+            </span>
+          )}
         </div>
-        <span className="shrink-0 text-[10px] font-medium text-gray-400">
-          {match.result_note ?? "FT"}
-        </span>
-        {prediction && (
-          <span
-            className={`shrink-0 rounded px-1 py-0.5 text-[10px] font-bold ${POINTS_COLOR[prediction.points]}`}
-          >
-            +{prediction.points}
-          </span>
+        {match.result_note && (
+          <p className="mt-1 text-center text-[10px] font-medium text-gray-500">
+            {match.result_note}
+          </p>
         )}
       </Link>
     );
